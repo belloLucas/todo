@@ -5,7 +5,7 @@ export default function Tasks() {
   return (
     <main>
       <div className="createTask">
-        <div className="boxTask">
+        <div className="createTaskBox">
           <div className="header">
             <input type="text" name="title" id="title" placeholder="Título" />
             <FaRegStar className="addToFavorite" />
