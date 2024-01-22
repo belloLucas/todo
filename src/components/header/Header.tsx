@@ -1,7 +1,7 @@
 import logo from "../../assets/logo.png";
 import { MdSearch } from "react-icons/md";
 
-import "./header.scss";
+import "./Header.scss";
 
 export default function Header() {
   return (
