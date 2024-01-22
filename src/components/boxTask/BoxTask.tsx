@@ -1,7 +1,7 @@
 import { FaRegStar } from "react-icons/fa";
 // import {  FaStar } from "react-icons/fa";
 import { IoMdClose, IoMdColorFill } from "react-icons/io";
-import { GoPencil } from "react-icons/go";
+import { GoPencil, GoCheck } from "react-icons/go";
 import BoxColor from "../boxColor/BoxColor";
 
 import "./BoxTask.scss";
@@ -9,6 +9,7 @@ import { useState } from "react";
 
 export default function TaskBox() {
   const [isColorBoxOpen, setIsColorBoxOpen] = useState(false);
+  const [isEditorModeActive, setIsEditorModeActive] = useState(false);
 
   const handleColorBoxOpen = () => {
     setIsColorBoxOpen(true);
@@ -19,24 +20,51 @@ export default function TaskBox() {
     setIsColorBoxOpen(false);
   };
 
+  const handleEditorModeOpen = () => {
+    setIsEditorModeActive(true);
+  };
+
+  const handleEdition = () => {
+    setIsEditorModeActive(false);
+  };
+
   return (
     <div className="boxTask">
       <div className="header">
-        <input type="text" name="title" id="title" placeholder="Título" />
+        {isEditorModeActive ? (
+          <input type="text" name="title" id="title" placeholder="Título" />
+        ) : (
+          <h5>Titulo</h5>
+        )}
         <FaRegStar className="addToFavorite" />
       </div>
       <div className="content">
-        <textarea
-          name="description"
-          className="description"
-          placeholder="Criar nota..."
-        />
+        {isEditorModeActive ? (
+          <textarea
+            name="description"
+            className="description"
+            placeholder="Criar nota..."
+          />
+        ) : (
+          <p>Criar nota...</p>
+        )}
       </div>
       <div className="buttons">
         <div className="left">
-          <span className="edit">
-            <GoPencil />
-          </span>
+          {isEditorModeActive ? (
+            <span
+              className="completeEdit"
+              onClick={handleEdition}
+              style={{ background: isEditorModeActive ? "#ffe3b3" : "none" }}
+            >
+              <GoCheck />
+            </span>
+          ) : (
+            <span onClick={handleEditorModeOpen} className="edit">
+              <GoPencil />
+            </span>
+          )}
+
           <span
             className="paint"
             onClick={handleColorBoxOpen}
