@@ -17,10 +17,10 @@ export default function Tasks() {
               placeholder="Criar nota..."
             />
           </div>
-          <button className="createTaskBtn" type="submit">
-            Criar tarefa
-          </button>
         </div>
+        <button className="createTaskBtn" type="submit">
+          Criar tarefa
+        </button>
       </div>
     </main>
   );
