@@ -37,7 +37,13 @@ export default function TaskBox() {
           <span className="edit">
             <GoPencil />
           </span>
-          <span className="paint" onClick={handleColorBoxOpen}>
+          <span
+            className="paint"
+            onClick={handleColorBoxOpen}
+            style={{
+              background: isColorBoxOpen ? "#ffe3b3" : "none",
+            }}
+          >
             <IoMdColorFill />
           </span>
         </div>
