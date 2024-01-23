@@ -1,14 +1,18 @@
 import BoxTask from "../boxTask/BoxTask";
+import CreateTask from "../createTask/CreateTask";
 import { useState } from "react";
 
 import "./Tasks.scss";
 
+interface Task {
+  id: number;
+  favorite: boolean;
+  title: string;
+  description: string;
+}
+
 export default function Tasks() {
-  const [tasks, setTasks] = useState([
-    { id: 1, favorite: false },
-    { id: 2, favorite: false },
-    { id: 3, favorite: false },
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const toggleFavorite = (taskId: number) => {
     setTasks((prevTasks) =>
@@ -18,8 +22,13 @@ export default function Tasks() {
     );
   };
 
+  const createTask = (newTask: Task) => {
+    setTasks((prevTasks) => [...prevTasks, newTask]);
+  };
+
   return (
     <>
+      <CreateTask onTaskCreate={createTask} />
       <section className="favorite">
         <p className="title">Favoritas</p>
         <div className="fav-row">
@@ -30,6 +39,8 @@ export default function Tasks() {
                 key={task.id}
                 taskId={task.id}
                 favorite={task.favorite}
+                title={task.title}
+                description={task.description}
                 onToggleFavorite={toggleFavorite}
               />
             ))}
@@ -45,6 +56,8 @@ export default function Tasks() {
                 key={task.id}
                 taskId={task.id}
                 favorite={task.favorite}
+                title={task.title}
+                description={task.description}
                 onToggleFavorite={toggleFavorite}
               />
             ))}

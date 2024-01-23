@@ -7,18 +7,28 @@ import BoxColor from "../boxColor/BoxColor";
 import "./BoxTask.scss";
 import { useState } from "react";
 
+interface BoxTaskProps {
+  taskId: number;
+  favorite: boolean;
+  title: string;
+  description: string;
+  onToggleFavorite: (taskId: number) => void;
+}
+
 export default function TaskBox({
   taskId,
   favorite,
+  title: initialTitle,
+  description: initialDescription,
   onToggleFavorite,
-}: {
-  taskId: number;
-  favorite: boolean;
-  onToggleFavorite: (taskId: number) => void;
-}) {
+}: BoxTaskProps) {
   const [isColorBoxOpen, setIsColorBoxOpen] = useState(false);
   const [isEditorModeActive, setIsEditorModeActive] = useState(false);
-  const [isNoteFavorite, setIsNoteFavorite] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(initialTitle);
+  const [editedDescription, setEditedDescription] =
+    useState(initialDescription);
+  const [title, setTitle] = useState(initialTitle);
+  const [description, setDescription] = useState(initialDescription);
 
   const handleColorBoxOpen = () => {
     setIsColorBoxOpen(true);
@@ -35,10 +45,13 @@ export default function TaskBox({
 
   const handleEdition = () => {
     setIsEditorModeActive(false);
+    console.log(editedTitle);
+    console.log(editedDescription);
+    setTitle(editedTitle);
+    setDescription(editedDescription);
   };
 
   const handleToggleNoteFavorite = () => {
-    setIsNoteFavorite(!isNoteFavorite);
     onToggleFavorite(taskId);
   };
 
@@ -46,9 +59,16 @@ export default function TaskBox({
     <div className="boxTask">
       <div className="header">
         {isEditorModeActive ? (
-          <input type="text" name="title" id="title" placeholder="Título" />
+          <input
+            type="text"
+            name="title"
+            id="title"
+            placeholder="Título"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+          />
         ) : (
-          <h5>Titulo</h5>
+          <h5>{title}</h5>
         )}
         {favorite ? (
           <FaRegStar
@@ -56,11 +76,13 @@ export default function TaskBox({
             onClick={handleToggleNoteFavorite}
           />
         ) : (
-          <FaStar
-            className="addToFavorite"
-            onClick={handleToggleNoteFavorite}
-            style={{ color: "#FFA000" }}
-          />
+          <button type="submit">
+            <FaStar
+              className="addToFavorite"
+              onClick={handleToggleNoteFavorite}
+              style={{ color: "#FFA000" }}
+            />
+          </button>
         )}
       </div>
       <div className="content">
@@ -69,9 +91,11 @@ export default function TaskBox({
             name="description"
             className="description"
             placeholder="Criar nota..."
+            value={editedDescription}
+            onChange={(e) => setEditedDescription(e.target.value)}
           />
         ) : (
-          <p>Criar nota...</p>
+          <p>{description}</p>
         )}
       </div>
       <div className="buttons">
