@@ -1,5 +1,5 @@
 import { FaRegStar } from "react-icons/fa";
-// import {  FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { IoMdClose, IoMdColorFill } from "react-icons/io";
 import { GoPencil, GoCheck } from "react-icons/go";
 import BoxColor from "../boxColor/BoxColor";
@@ -7,9 +7,18 @@ import BoxColor from "../boxColor/BoxColor";
 import "./BoxTask.scss";
 import { useState } from "react";
 
-export default function TaskBox() {
+export default function TaskBox({
+  taskId,
+  favorite,
+  onToggleFavorite,
+}: {
+  taskId: number;
+  favorite: boolean;
+  onToggleFavorite: (taskId: number) => void;
+}) {
   const [isColorBoxOpen, setIsColorBoxOpen] = useState(false);
   const [isEditorModeActive, setIsEditorModeActive] = useState(false);
+  const [isNoteFavorite, setIsNoteFavorite] = useState(false);
 
   const handleColorBoxOpen = () => {
     setIsColorBoxOpen(true);
@@ -28,6 +37,11 @@ export default function TaskBox() {
     setIsEditorModeActive(false);
   };
 
+  const handleToggleNoteFavorite = () => {
+    setIsNoteFavorite(!isNoteFavorite);
+    onToggleFavorite(taskId);
+  };
+
   return (
     <div className="boxTask">
       <div className="header">
@@ -36,7 +50,18 @@ export default function TaskBox() {
         ) : (
           <h5>Titulo</h5>
         )}
-        <FaRegStar className="addToFavorite" />
+        {favorite ? (
+          <FaRegStar
+            className="addToFavorite"
+            onClick={handleToggleNoteFavorite}
+          />
+        ) : (
+          <FaStar
+            className="addToFavorite"
+            onClick={handleToggleNoteFavorite}
+            style={{ color: "#FFA000" }}
+          />
+        )}
       </div>
       <div className="content">
         {isEditorModeActive ? (
