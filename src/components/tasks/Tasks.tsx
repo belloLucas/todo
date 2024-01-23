@@ -26,6 +26,25 @@ export default function Tasks() {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
+  const editTask = (
+    taskId: number,
+    updatedTitle: string,
+    updatedDescription: string
+  ) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId
+          ? { ...task, title: updatedTitle, description: updatedDescription }
+          : task
+      )
+    );
+  };
+
+  const deleteNote = (taskId: number) => {
+    const updatedTasks = tasks.filter((task) => task.id !== taskId);
+    setTasks(updatedTasks);
+  };
+
   return (
     <>
       <CreateTask onTaskCreate={createTask} />
@@ -42,6 +61,8 @@ export default function Tasks() {
                 title={task.title}
                 description={task.description}
                 onToggleFavorite={toggleFavorite}
+                onDeleteNote={deleteNote}
+                onTaskEdit={editTask}
               />
             ))}
         </div>
@@ -59,6 +80,8 @@ export default function Tasks() {
                 title={task.title}
                 description={task.description}
                 onToggleFavorite={toggleFavorite}
+                onDeleteNote={deleteNote}
+                onTaskEdit={editTask}
               />
             ))}
         </div>

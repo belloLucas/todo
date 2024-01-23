@@ -13,6 +13,12 @@ interface BoxTaskProps {
   title: string;
   description: string;
   onToggleFavorite: (taskId: number) => void;
+  onDeleteNote: (taskId: number) => void;
+  onTaskEdit: (
+    taskId: number,
+    updatedTitle: string,
+    updatedDescription: string
+  ) => void;
 }
 
 export default function TaskBox({
@@ -21,6 +27,8 @@ export default function TaskBox({
   title: initialTitle,
   description: initialDescription,
   onToggleFavorite,
+  onDeleteNote,
+  onTaskEdit,
 }: BoxTaskProps) {
   const [isColorBoxOpen, setIsColorBoxOpen] = useState(false);
   const [isEditorModeActive, setIsEditorModeActive] = useState(false);
@@ -45,14 +53,17 @@ export default function TaskBox({
 
   const handleEdition = () => {
     setIsEditorModeActive(false);
-    console.log(editedTitle);
-    console.log(editedDescription);
     setTitle(editedTitle);
     setDescription(editedDescription);
+    onTaskEdit(taskId, editedTitle, editedDescription);
   };
 
   const handleToggleNoteFavorite = () => {
     onToggleFavorite(taskId);
+  };
+
+  const handleDeleteNote = () => {
+    onDeleteNote(taskId);
   };
 
   return (
@@ -124,7 +135,7 @@ export default function TaskBox({
             <IoMdColorFill />
           </span>
         </div>
-        <span className="remove">
+        <span className="remove" onClick={handleDeleteNote}>
           <IoMdClose />
         </span>
       </div>
