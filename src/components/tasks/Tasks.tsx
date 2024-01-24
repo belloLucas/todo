@@ -26,24 +26,88 @@ export default function Tasks() {
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
-  const editTask = (
+  const editTask = async (
     taskId: number,
     updatedTitle: string,
     updatedDescription: string
   ) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === taskId
-          ? { ...task, title: updatedTitle, description: updatedDescription }
-          : task
-      )
+    const updatedTasks = tasks.map((task) =>
+      task.id === taskId
+        ? { ...task, title: updatedTitle, description: updatedDescription }
+        : task
     );
+
+    setTasks(updatedTasks);
+
+    try {
+      const response = await fetch(
+        `https://todo-api-jijk.onrender.com/tasks/${taskId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: updatedTitle,
+            description: updatedDescription,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Error updating task:", response.statusText);
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task.id === taskId
+              ? { ...task, title: task.title, description: task.description }
+              : task
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
   };
 
-  const deleteNote = (taskId: number) => {
-    const updatedTasks = tasks.filter((task) => task.id !== taskId);
-    setTasks(updatedTasks);
+  const deleteNote = async (taskId: number) => {
+    try {
+      const response = await fetch(
+        `https://todo-api-jijk.onrender.com/tasks/${taskId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        const updatedTasks = tasks.filter((task) => task.id !== taskId);
+        setTasks(updatedTasks);
+      } else {
+        console.error("Error deleting task:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(
+          "https://todo-api-jijk.onrender.com/tasks"
+        );
+        if (response.ok) {
+          const tasksData = await response.json();
+          setTasks(tasksData);
+        } else {
+          console.error("Error fetching tasks:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -81,7 +145,7 @@ export default function Tasks() {
                 title={task.title}
                 description={task.description}
                 onToggleFavorite={toggleFavorite}
-                onDeleteNote={deleteNote}
+                onDeleteNote={() => deleteNote(task.id)}
                 onTaskEdit={editTask}
               />
             ))}
@@ -100,7 +164,7 @@ export default function Tasks() {
                 title={task.title}
                 description={task.description}
                 onToggleFavorite={toggleFavorite}
-                onDeleteNote={deleteNote}
+                onDeleteNote={() => deleteNote(task.id)}
                 onTaskEdit={editTask}
               />
             ))}
