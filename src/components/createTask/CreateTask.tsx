@@ -3,10 +3,11 @@ import "./CreateTask.scss";
 import { FaRegStar } from "react-icons/fa";
 
 interface Task {
-  id: number;
-  favorite: boolean;
   title: string;
   description: string;
+  color: string;
+  id: number;
+  favorite: boolean;
 }
 
 interface CreateTaskProps {
@@ -22,17 +23,38 @@ export default function CreateTask({ onTaskCreate }: CreateTaskProps) {
     setIsFavorite(!isFavorite);
   };
 
-  const handleCreateTask = () => {
+  const handleCreateTask = async (event: React.FormEvent) => {
+    event.preventDefault();
     const newTaskId = Math.floor(Math.random() * 1000);
 
     const newTask: Task = {
-      id: newTaskId,
-      favorite: !false,
       title: title,
       description: description,
+      color: "white",
+      id: newTaskId,
+      favorite: !false,
     };
 
-    onTaskCreate(newTask);
+    await onTaskCreate(newTask);
+
+    try {
+      console.log("Request payload:", JSON.stringify(newTask));
+      const response = await fetch("https://todo-api-jijk.onrender.com/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      });
+      if (response.ok) {
+        onTaskCreate(newTask);
+        console.log("Task created successfully");
+      } else {
+        console.error("Error creating task:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error creating task:", error);
+    }
 
     setTitle("");
     setDescription("");
@@ -43,37 +65,35 @@ export default function CreateTask({ onTaskCreate }: CreateTaskProps) {
     <main>
       <div className="createTask">
         <div className="createTaskBox">
-          <div className="header">
-            <input
-              type="text"
-              name="title"
-              id="title"
-              placeholder="Título"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <FaRegStar
-              className={`addToFavorite ${isFavorite ? "active" : ""}`}
-              onClick={handleFavoriteToggle}
-            />
-          </div>
-          <div className="content">
-            <textarea
-              name="description"
-              className="description"
-              placeholder="Criar nota..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
+          <form onSubmit={handleCreateTask}>
+            <div className="header">
+              <input
+                type="text"
+                name="title"
+                id="title"
+                placeholder="Título"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <FaRegStar
+                className={`addToFavorite ${isFavorite ? "active" : ""}`}
+                onClick={handleFavoriteToggle}
+              />
+            </div>
+            <div className="content">
+              <textarea
+                name="description"
+                className="description"
+                placeholder="Criar nota..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+            <button className="createTaskBtn" type="submit">
+              Criar tarefa
+            </button>
+          </form>
         </div>
-        <button
-          className="createTaskBtn"
-          type="button"
-          onClick={handleCreateTask}
-        >
-          Criar tarefa
-        </button>
       </div>
     </main>
   );

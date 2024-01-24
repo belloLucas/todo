@@ -1,14 +1,14 @@
 import BoxTask from "../boxTask/BoxTask";
 import CreateTask from "../createTask/CreateTask";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import "./Tasks.scss";
 
 interface Task {
-  id: number;
-  favorite: boolean;
   title: string;
   description: string;
+  id: number;
+  favorite: boolean;
 }
 
 export default function Tasks() {
@@ -44,6 +44,26 @@ export default function Tasks() {
     const updatedTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(updatedTasks);
   };
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(
+          "https://todo-api-jijk.onrender.com/tasks"
+        );
+        if (response.ok) {
+          const tasksData = await response.json();
+          setTasks(tasksData);
+        } else {
+          console.error("Error fetching tasks:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   return (
     <>
