@@ -13,6 +13,9 @@ interface Task {
 
 export default function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [selectedColors, setSelectedColors] = useState<{
+    [taskId: number]: string;
+  }>({});
 
   const toggleFavorite = async (taskId: number) => {
     setTasks((prevTasks) =>
@@ -95,6 +98,35 @@ export default function Tasks() {
     }
   };
 
+  const handleColorChange = async (taskId: number, color: string) => {
+    try {
+      const response = await fetch(
+        `https://todo-api-jijk.onrender.com/tasks/${taskId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            color: color,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Error updating color:", response.statusText);
+      } else {
+        setSelectedColors((prevColors) => {
+          const updatedColors = { ...prevColors, [taskId]: color };
+          console.log("Updated Colors:", updatedColors);
+          return updatedColors;
+        });
+      }
+    } catch (error) {
+      console.error("Error updating color:", error);
+    }
+  };
+
   const deleteNote = async (taskId: number) => {
     try {
       const response = await fetch(
@@ -173,6 +205,8 @@ export default function Tasks() {
                 onToggleFavorite={toggleFavorite}
                 onDeleteNote={() => deleteNote(task.id)}
                 onTaskEdit={editTask}
+                onColorChange={handleColorChange}
+                selectedColor={selectedColors[task.id]}
               />
             ))}
         </div>
@@ -192,6 +226,8 @@ export default function Tasks() {
                 onToggleFavorite={toggleFavorite}
                 onDeleteNote={() => deleteNote(task.id)}
                 onTaskEdit={editTask}
+                onColorChange={handleColorChange}
+                selectedColor={selectedColors[task.id]}
               />
             ))}
         </div>

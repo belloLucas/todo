@@ -33,6 +33,11 @@
       }
     }
 
+    .favoriteSubmit {
+      border: none;
+      background: none;
+    }
+
     .addToFavorite {
       position: absolute;
       cursor: pointer;
@@ -86,4 +91,52 @@
       border-radius: 50%;
     }
   }
+}
+
+.light-blue {
+  background-color: #bae2ff;
+}
+
+.light-green {
+  background-color: #b9ffdd;
+}
+
+.yellow {
+  background-color: #ffe8ac;
+}
+
+.light-red {
+  background-color: #ffcab9;
+}
+
+.red {
+  background-color: #f99494;
+}
+
+.blue {
+  background-color: #9dd6ff;
+}
+
+.purple {
+  background-color: #eca1ff;
+}
+
+.lime {
+  background-color: #daff8b;
+}
+
+.orange {
+  background-color: #ffa285;
+}
+
+.light-grey {
+  background-color: #cdcdcd;
+}
+
+.grey {
+  background-color: #979797;
+}
+
+.brown {
+  background-color: #a99a7c;
 }

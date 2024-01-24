@@ -8,10 +8,11 @@ import "./BoxTask.scss";
 import { useState } from "react";
 
 interface BoxTaskProps {
-  taskId: number;
-  favorite: boolean;
   title: string;
   description: string;
+  selectedColor?: string;
+  favorite: boolean;
+  taskId: number;
   onToggleFavorite: (taskId: number) => void;
   onDeleteNote: (taskId: number) => void;
   onTaskEdit: (
@@ -19,6 +20,7 @@ interface BoxTaskProps {
     updatedTitle: string,
     updatedDescription: string
   ) => void;
+  onColorChange: (taskId: number, color: string) => void;
 }
 
 export default function TaskBox({
@@ -29,6 +31,8 @@ export default function TaskBox({
   onToggleFavorite,
   onDeleteNote,
   onTaskEdit,
+  onColorChange,
+  selectedColor,
 }: BoxTaskProps) {
   const [isColorBoxOpen, setIsColorBoxOpen] = useState(false);
   const [isEditorModeActive, setIsEditorModeActive] = useState(false);
@@ -43,7 +47,7 @@ export default function TaskBox({
   };
 
   const handleColorSelect = (selectedColor: string) => {
-    console.log(selectedColor);
+    onColorChange(taskId, selectedColor);
     setIsColorBoxOpen(false);
   };
 
@@ -67,7 +71,7 @@ export default function TaskBox({
   };
 
   return (
-    <div className="boxTask">
+    <div className={`boxTask ${selectedColor}`}>
       <div className="header">
         {isEditorModeActive ? (
           <input
@@ -87,7 +91,7 @@ export default function TaskBox({
             onClick={handleToggleNoteFavorite}
           />
         ) : (
-          <button type="submit">
+          <button className="favoriteSubmit" type="submit">
             <FaStar
               className="addToFavorite"
               onClick={handleToggleNoteFavorite}

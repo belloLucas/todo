@@ -75,10 +75,6 @@ export default function CreateTask({ onTaskCreate }: CreateTaskProps) {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <FaRegStar
-                className={`addToFavorite ${isFavorite ? "active" : ""}`}
-                onClick={handleFavoriteToggle}
-              />
             </div>
             <div className="content">
               <textarea
