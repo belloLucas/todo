@@ -7,6 +7,7 @@ import "./Tasks.scss";
 interface Task {
   title: string;
   description: string;
+  color: string;
   id: number;
   favorite: boolean;
 }
@@ -155,7 +156,16 @@ export default function Tasks() {
         );
         if (response.ok) {
           const tasksData = await response.json();
+
+          const colorsObject: { [taskId: number]: string } = {};
+
+          tasksData.forEach((task: Task) => {
+            colorsObject[task.id] = task.color || "";
+          });
+
+          // Update state with tasks and colors
           setTasks(tasksData);
+          setSelectedColors(colorsObject);
         } else {
           console.error("Error fetching tasks:", response.statusText);
         }

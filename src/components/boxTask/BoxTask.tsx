@@ -71,7 +71,7 @@ export default function TaskBox({
   };
 
   return (
-    <div className={`boxTask ${selectedColor}`}>
+    <div className={`boxTask ${selectedColor} `}>
       <div className="header">
         {isEditorModeActive ? (
           <input

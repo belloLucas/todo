@@ -38,7 +38,6 @@ export default function CreateTask({ onTaskCreate }: CreateTaskProps) {
     await onTaskCreate(newTask);
 
     try {
-      console.log("Request payload:", JSON.stringify(newTask));
       const response = await fetch("https://todo-api-jijk.onrender.com/tasks", {
         method: "POST",
         headers: {
