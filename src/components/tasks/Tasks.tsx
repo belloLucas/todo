@@ -14,12 +14,38 @@ interface Task {
 export default function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  const toggleFavorite = (taskId: number) => {
+  const toggleFavorite = async (taskId: number) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === taskId ? { ...task, favorite: !task.favorite } : task
       )
     );
+
+    try {
+      const response = await fetch(
+        `https://todo-api-jijk.onrender.com/tasks/${taskId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            favorite: !tasks.find((task) => task.id === taskId)?.favorite,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Error updating favorite status:", response.statusText);
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task.id === taskId ? { ...task, favorite: !task.favorite } : task
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating favorite status:", error);
+    }
   };
 
   const createTask = (newTask: Task) => {
