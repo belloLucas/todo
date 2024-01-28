@@ -63,8 +63,8 @@ export default function CreateTask({ onTaskCreate }: CreateTaskProps) {
   return (
     <main>
       <div className="createTask">
-        <div className="createTaskBox">
-          <form onSubmit={handleCreateTask}>
+        <form onSubmit={handleCreateTask}>
+          <div className="createTaskBox">
             <div className="header">
               <input
                 type="text"
@@ -88,11 +88,11 @@ export default function CreateTask({ onTaskCreate }: CreateTaskProps) {
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
-            <button className="createTaskBtn" type="submit">
-              Criar tarefa
-            </button>
-          </form>
-        </div>
+          </div>
+          <button className="createTaskBtn" type="submit">
+            Criar tarefa
+          </button>
+        </form>
       </div>
     </main>
   );
